@@ -13,7 +13,7 @@ function App() {
   const totalEvents = events.length;
 
   const addEventHandler = (newEvent) => {
-  setEvents([...events, newEvent]);
+    setEvents([...events, newEvent]);
   };
 
   const totalExpectedGuests = events.reduce(
@@ -25,6 +25,15 @@ function App() {
     (total, event) => total + event.arrivedGuests,
     0
   );
+
+  const deleteEventHandler = (id) => {
+
+    const updatedEvents = events.filter(
+      event => event.id !== id
+    );
+
+    setEvents(updatedEvents);
+  };
 
   return (
     <div className="flex min-h-screen bg-[#050816] text-white">
@@ -69,14 +78,16 @@ function App() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
           {events.map(event => (
-            <EventCard
-              key={event.id}
-              name={event.name}
-              venue={event.venue}
-              date={event.date}
-              expectedGuests={event.expectedGuests}
-              arrivedGuests={event.arrivedGuests}
-            />
+              <EventCard
+                key={event.id}
+                id={event.id}
+                name={event.name}
+                venue={event.venue}
+                date={event.date}
+                expectedGuests={event.expectedGuests}
+                arrivedGuests={event.arrivedGuests}
+                onDelete={deleteEventHandler}
+              />
           ))}
 
         </div>

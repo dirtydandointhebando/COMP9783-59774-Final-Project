@@ -43,6 +43,13 @@ function EventCard(props) {
         </div>
 
       </div>
+      
+      <button
+        onClick={() => props.onDelete(props.id)}
+        className="mt-6 w-full bg-red-600 hover:bg-red-500 transition py-3 rounded-xl"
+      >
+        Delete Event
+      </button>
 
     </div>
   );
