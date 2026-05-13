@@ -3,7 +3,7 @@ import Sidebar from "./components/Sidebar";
 import StatsCard from "./components/StatsCard";
 import EventCard from "./components/EventCard";
 import EventForm from "./components/EventForm";
-
+import PartyForm from "./components/PartyForm";
 import initialEvents from "./data/events";
 
 function App() {
@@ -45,6 +45,34 @@ function App() {
     );
 
     setEvents(updatedEvents);
+  };
+
+  const addPartyHandler = (newParty) => {
+
+    const updatedEvents = events.map(event => {
+
+      if (event.id === selectedEvent.id) {
+
+        return {
+          ...event,
+
+          parties: [
+            ...event.parties,
+            newParty
+          ]
+        };
+      }
+
+      return event;
+    });
+
+    setEvents(updatedEvents);
+
+    const updatedSelectedEvent = updatedEvents.find(
+      event => event.id === selectedEvent.id
+    );
+
+    setSelectedEvent(updatedSelectedEvent);
   };
 
   return (
