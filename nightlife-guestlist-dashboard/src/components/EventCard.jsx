@@ -1,7 +1,9 @@
 function EventCard(props) {
   return (
-    <div className="bg-[#0B1020] border border-gray-800 rounded-3xl p-6 hover:border-blue-500 transition">
-
+    <div
+    onClick={() => props.onSelect(props.event)}
+    className="bg-[#0B1020] border border-gray-800 rounded-3xl p-6 hover:border-blue-500 transition cursor-pointer"
+    >
       <div className="flex items-center justify-between mb-6">
 
         <div>
@@ -43,7 +45,7 @@ function EventCard(props) {
         </div>
 
       </div>
-      
+
       <button
         onClick={() => props.onDelete(props.id)}
         className="mt-6 w-full bg-red-600 hover:bg-red-500 transition py-3 rounded-xl"

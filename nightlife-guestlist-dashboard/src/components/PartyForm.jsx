@@ -66,7 +66,7 @@ function PartyForm(props) {
       )}
 
       <button className="mt-6 bg-blue-600 hover:bg-blue-500 transition px-6 py-3 rounded-xl font-semibold">
-        Add Party
+        Add Guests
       </button>
 
     </form>

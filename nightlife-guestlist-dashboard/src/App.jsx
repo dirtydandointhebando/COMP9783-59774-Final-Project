@@ -1,20 +1,21 @@
 import { useState } from "react";
+
 import Sidebar from "./components/Sidebar";
 import StatsCard from "./components/StatsCard";
 import EventCard from "./components/EventCard";
 import EventForm from "./components/EventForm";
 import PartyForm from "./components/PartyForm";
+import PartyCard from "./components/PartyCard";
+
 import initialEvents from "./data/events";
 
 function App() {
- 
-  const [events, setEvents] = useState(initialEvents);
- 
-  const totalEvents = events.length;
 
-  const addEventHandler = (newEvent) => {
-    setEvents([...events, newEvent]);
-  };
+  const [events, setEvents] = useState(initialEvents);
+
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  const totalEvents = events.length;
 
   const totalExpectedGuests = events.reduce(
     (total, event) =>
@@ -38,6 +39,19 @@ function App() {
     0
   );
 
+  const addEventHandler = (newEvent) => {
+
+    const updatedEvent = {
+      ...newEvent,
+      parties: []
+    };
+
+    setEvents([
+      ...events,
+      updatedEvent
+    ]);
+  };
+
   const deleteEventHandler = (id) => {
 
     const updatedEvents = events.filter(
@@ -45,6 +59,14 @@ function App() {
     );
 
     setEvents(updatedEvents);
+
+    if (selectedEvent?.id === id) {
+      setSelectedEvent(null);
+    }
+  };
+
+  const selectEventHandler = (event) => {
+    setSelectedEvent(event);
   };
 
   const addPartyHandler = (newParty) => {
@@ -94,6 +116,8 @@ function App() {
 
         </div>
 
+        <EventForm onAddEvent={addEventHandler} />
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
           <StatsCard
@@ -112,38 +136,150 @@ function App() {
           />
 
         </div>
-        
-        <EventForm onAddEvent={addEventHandler} />
-        
+
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
           {events.map(event => (
-              <EventCard
-                key={event.id}
-                id={event.id}
-                name={event.name}
-                venue={event.venue}
-                date={event.date}
-                expectedGuests={
-                  event.parties.reduce(
-                    (total, party) => total + party.guestCount,
-                    0
-                  )
-                }
 
-                arrivedGuests={
-                  event.parties.reduce(
-                    (total, party) => total + party.arrivedCount,
-                    0
-                  )
-                }
-                onDelete={deleteEventHandler}
-              />
+            <EventCard
+              key={event.id}
+              id={event.id}
+              event={event}
+              name={event.name}
+              venue={event.venue}
+              date={event.date}
+
+              expectedGuests={
+                event.parties.reduce(
+                  (total, party) =>
+                    total + party.guestCount,
+                  0
+                )
+              }
+
+              arrivedGuests={
+                event.parties.reduce(
+                  (total, party) =>
+                    total + party.arrivedCount,
+                  0
+                )
+              }
+
+              onDelete={deleteEventHandler}
+              onSelect={selectEventHandler}
+            />
+
           ))}
 
         </div>
 
       </main>
+
+      {selectedEvent && (
+
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-6">
+
+          <div className="bg-[#0B1020] border border-gray-800 rounded-3xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-8">
+
+            <div className="flex items-start justify-between mb-8">
+
+              <div>
+
+                <div className="flex items-center gap-4 mb-2">
+
+                  <h2 className="text-4xl font-bold">
+                    {selectedEvent.name}
+                  </h2>
+
+                  <button
+                    onClick={() => {
+
+                      const confirmed = window.confirm(
+                        "Are you sure you want to delete this event?"
+                      );
+
+                      if (confirmed) {
+                        deleteEventHandler(selectedEvent.id);
+                      }
+
+                    }}
+
+                    className="bg-red-600 hover:bg-red-500 transition px-4 py-2 rounded-xl text-sm"
+                  >
+                    Delete Event
+                  </button>
+
+                </div>
+
+                <p className="text-gray-400">
+                  {selectedEvent.venue}
+                </p>
+
+              </div>
+
+              <button
+                onClick={() => setSelectedEvent(null)}
+                className="bg-gray-800 hover:bg-gray-700 transition px-4 py-2 rounded-xl"
+              >
+                Close
+              </button>
+
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+              <StatsCard
+                label="Total Parties"
+                value={selectedEvent.parties.length}
+              />
+
+              <StatsCard
+                label="Expected Guests"
+                value={
+                  selectedEvent.parties.reduce(
+                    (total, party) =>
+                      total + party.guestCount,
+                    0
+                  )
+                }
+              />
+
+              <StatsCard
+                label="Guests Arrived"
+                value={
+                  selectedEvent.parties.reduce(
+                    (total, party) =>
+                      total + party.arrivedCount,
+                    0
+                  )
+                }
+              />
+
+            </div>
+
+            <PartyForm onAddParty={addPartyHandler} />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {selectedEvent.parties.map(party => (
+
+                <PartyCard
+                  key={party.id}
+                  id={party.id}
+                  partyName={party.partyName}
+                  guestCount={party.guestCount}
+                  arrivedCount={party.arrivedCount}
+                />
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
 
     </div>
   );
