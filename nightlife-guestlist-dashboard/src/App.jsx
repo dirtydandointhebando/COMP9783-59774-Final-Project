@@ -1,11 +1,14 @@
+import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import StatsCard from "./components/StatsCard";
 import EventCard from "./components/EventCard";
 
-import events from "./data/events";
+import initialEvents from "./data/events";
 
 function App() {
-
+ 
+  const [events, setEvents] = useState(initialEvents);
+ 
   const totalEvents = events.length;
 
   const totalExpectedGuests = events.reduce(
