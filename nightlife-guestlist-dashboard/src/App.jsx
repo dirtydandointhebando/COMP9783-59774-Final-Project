@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import StatsCard from "./components/StatsCard";
 import EventCard from "./components/EventCard";
+import EventForm from "./components/EventForm";
 
 import initialEvents from "./data/events";
 
@@ -10,6 +11,10 @@ function App() {
   const [events, setEvents] = useState(initialEvents);
  
   const totalEvents = events.length;
+
+  const addEventHandler = (newEvent) => {
+  setEvents([...events, newEvent]);
+  };
 
   const totalExpectedGuests = events.reduce(
     (total, event) => total + event.expectedGuests,
@@ -58,7 +63,9 @@ function App() {
           />
 
         </div>
-
+        
+        <EventForm onAddEvent={addEventHandler} />
+        
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
           {events.map(event => (
