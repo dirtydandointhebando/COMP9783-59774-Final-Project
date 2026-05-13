@@ -17,12 +17,24 @@ function App() {
   };
 
   const totalExpectedGuests = events.reduce(
-    (total, event) => total + event.expectedGuests,
+    (total, event) =>
+      total +
+      event.parties.reduce(
+        (partyTotal, party) =>
+          partyTotal + party.guestCount,
+        0
+      ),
     0
   );
 
   const totalArrivedGuests = events.reduce(
-    (total, event) => total + event.arrivedGuests,
+    (total, event) =>
+      total +
+      event.parties.reduce(
+        (partyTotal, party) =>
+          partyTotal + party.arrivedCount,
+        0
+      ),
     0
   );
 
@@ -84,8 +96,19 @@ function App() {
                 name={event.name}
                 venue={event.venue}
                 date={event.date}
-                expectedGuests={event.expectedGuests}
-                arrivedGuests={event.arrivedGuests}
+                expectedGuests={
+                  event.parties.reduce(
+                    (total, party) => total + party.guestCount,
+                    0
+                  )
+                }
+
+                arrivedGuests={
+                  event.parties.reduce(
+                    (total, party) => total + party.arrivedCount,
+                    0
+                  )
+                }
                 onDelete={deleteEventHandler}
               />
           ))}
