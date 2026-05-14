@@ -192,11 +192,11 @@ function App() {
         <div className="mb-10">
 
           <h1 className="text-5xl font-bold mb-3">
-            Nightlife Dashboard
+            Guest List & Events Dashboard
           </h1>
 
           <p className="text-gray-400">
-            Manage events and guest lists
+            Manage events and guest list bookings
           </p>
 
         </div>
