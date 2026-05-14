@@ -70,7 +70,7 @@ function App() {
   };
 
   const addPartyHandler = (newParty) => {
-
+    
     const updatedEvents = events.map(event => {
 
       if (event.id === selectedEvent.id) {
@@ -82,6 +82,91 @@ function App() {
             ...event.parties,
             newParty
           ]
+        };
+      }
+
+      return event;
+    });
+
+    setEvents(updatedEvents);
+
+    const updatedSelectedEvent = updatedEvents.find(
+      event => event.id === selectedEvent.id
+    );
+
+    setSelectedEvent(updatedSelectedEvent);
+  };
+
+  const updateArrivedCountHandler = (
+    partyId,
+    change
+  ) => {
+
+    const updatedEvents = events.map(event => {
+
+      if (event.id === selectedEvent.id) {
+
+        const updatedParties = event.parties.map(party => {
+
+          if (party.id === partyId) {
+
+            const updatedArrivedCount =
+              party.arrivedCount + change;
+
+            if (
+              updatedArrivedCount < 0 ||
+              updatedArrivedCount > party.guestCount
+            ) {
+              return party;
+            }
+
+            return {
+              ...party,
+              arrivedCount: updatedArrivedCount
+            };
+          }
+
+          return party;
+        });
+
+        return {
+          ...event,
+          parties: updatedParties
+        };
+      }
+
+      return event;
+    });
+
+    setEvents(updatedEvents);
+
+    const updatedSelectedEvent = updatedEvents.find(
+      event => event.id === selectedEvent.id
+    );
+
+    setSelectedEvent(updatedSelectedEvent);
+  };
+
+  const deletePartyHandler = (partyId) => {
+
+  const confirmed = window.confirm(
+    "Are you sure you want to remove this party?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const updatedEvents = events.map(event => {
+
+      if (event.id === selectedEvent.id) {
+
+        return {
+          ...event,
+
+          parties: event.parties.filter(
+            party => party.id !== partyId
+          )
         };
       }
 
@@ -269,6 +354,8 @@ function App() {
                   partyName={party.partyName}
                   guestCount={party.guestCount}
                   arrivedCount={party.arrivedCount}
+                  onUpdateArrivedCount={updateArrivedCountHandler}
+                  onDeleteParty={deletePartyHandler}
                 />
 
               ))}
